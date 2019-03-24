@@ -26,10 +26,20 @@ public class ServerGreeter extends Thread {
 					try {
 						System.out.println("The server is waiting for some to connect to\"");
 						Socket soc = ssock.accept();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
+						System.out.println("The client has connected.");
+						DataInputStream dis = (DataInputStream) soc.getInputStream();
+						System.out.println(dis.readUTF());
+						DataOutputStream dos = (DataOutputStream) soc.getOutputStream();
+						dos.writeUTF("Ban tacos");
+						soc.close();
+					} catch (SocketTimeoutException e) {
+						System.out.println("Socket Timeout exception has been caught");
+						bool = false;
+					}  catch (IOException e) {
+						System.out.println("IOException has been caught");
+						bool = false;
 						e.printStackTrace();
-					}
+					} 
 			}
 			//5. Make a try-catch block that checks for two types Exceptions: SocketTimeoutException and IOException.
 			//   Put steps 8 - 15 in the try block.
@@ -61,6 +71,12 @@ public class ServerGreeter extends Thread {
 
 	public static void main(String[] args) {
 		//16. In a new thread, create an object of the ServerGreeter class and start the thread. Don't forget the try-catch.
-		
+		Thread a = new Thread(() -> {try {
+			ServerGreeter sg = new ServerGreeter();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}});
+	a.start();
 	}
 }
